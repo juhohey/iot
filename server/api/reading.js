@@ -26,12 +26,12 @@ module.exports = (app, knex) =>{
     return {
         '/readings':{
             get: async (req) => await model.get(),
-            put: async (req) => await model.create(getInstance(req.body)),
+            put: async (req) => await model.create( R.merge( getInstance(req.body), {createdAt:toTimeStamp(Date.now()) } )),
             delete: async (req) => await model.delete(),
             
             '/:id':{
                 get: async (req) => await model.get(req.params.id),
-                post: async (req) => await model.update(parseInt(req.params.id), getInstance(req.body)),
+                post: async (req) => await model.update(parseInt(req.params.id), R.merge(getInstance(req.body), {updatedAt:toTimeStamp(Date.now())})),
                 delete: async (req) => await model.delete(req.params.id),
             }
         }

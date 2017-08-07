@@ -2,3 +2,4 @@ node_modules
 docker/db_data
 public
 maria.txt
+iot.sqlite

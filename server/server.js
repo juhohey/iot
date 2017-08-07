@@ -3,7 +3,7 @@ const api = require('./api');
 
 const readModuleFile = require('./helpers/read-module-file');
 const fileTypes = require('./helpers/file-types');
-const db = require('./db/mariadb');
+const db = require('./db/sqlite');
 
 /**
  * Server instance
@@ -26,15 +26,16 @@ const server = (app, express) =>{
       .map(fileModule=>fileModule.module(app, express));
   }
 
+     
   db()
-    .then((connection)=>{
+    .then((connection)=>{ console.log('Knex´d');
       const knex = connection;
       setEnv('development'); //process.ENV
       bootstrap(); //Autoload modules
       router(app, express, knex);
       api(app, knex); //Autoload API
     })
-    .catch(err=>console.log(JSON.stringify(err)))
+    .catch(err=>console.log('DB:err', JSON.stringify(err)))
   
   return server;
 };
