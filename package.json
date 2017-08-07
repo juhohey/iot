@@ -6,6 +6,7 @@
   "scripts": {
     "test": "ava --verbose",
     "server": "nodemon --watch server/ index.js  --no-deprecation",
+    "migrate":"knex migrate:latest",
     "start": "nodemon   index.js --watch ./server/ "
   },
   "author": "",
@@ -14,7 +15,6 @@
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "knex": "^0.13.0",
-    "mariasql": "^0.2.6",
     "ramda": "^0.24.1",
     "sqlite3": "^3.1.9"
   },

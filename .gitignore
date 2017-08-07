@@ -3,3 +3,4 @@ docker/db_data
 public
 maria.txt
 iot.sqlite
+package.lock
