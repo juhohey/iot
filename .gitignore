@@ -5,3 +5,6 @@ maria.txt
 iot.sqlite
 package.lock
 npm-debug.*
+yarn.*
+package-lock.json
+
