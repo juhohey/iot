@@ -29,6 +29,9 @@ module.exports = (app, knex) =>{
             put: async (req) => await model.create( R.merge( getInstance(req.body), {createdAt:toTimeStamp(Date.now()) } )),
             delete: async (req) => await model.delete(),
             
+            '/latest':{
+                get: async (req) => await model.getLatest(),
+            },
             '/:id':{
                 get: async (req) => await model.get(req.params.id),
                 post: async (req) => await model.update(parseInt(req.params.id), R.merge(getInstance(req.body), {updatedAt:toTimeStamp(Date.now())})),

@@ -30,6 +30,7 @@ module.exports = (app, knex) =>{
                // post: async (req) => await model.update(parseInt(req.params.id), R.merge(getInstance(req.body), {updatedAt:toTimeStamp(Date.now())})),
                 delete: async (req) => await model.delete(req.params.id),
             }
+
         }
     }
 };
