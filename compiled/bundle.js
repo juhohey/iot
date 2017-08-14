@@ -26848,7 +26848,7 @@ var require$$0$35 = Object.freeze({
        };
 
        api.sync(PREFIX + '/devices', setDevices);
-       api.sync(PREFIX + '/readings', setReadings);
+       api.sync(PREFIX + '/readings/latest', setReadings);
        api.sync(PREFIX + '/commands', setCommands);
 
        var onUpdate = function onUpdate() {

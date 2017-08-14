@@ -19,7 +19,7 @@ const api = (store) => {
     };
 
     api.sync(`${PREFIX}/devices`, setDevices);
-    api.sync(`${PREFIX}/readings`, setReadings);
+    api.sync(`${PREFIX}/readings/latest`, setReadings);
     api.sync(`${PREFIX}/commands`, setCommands);
 
     const onUpdate = ()=>{
