@@ -28,7 +28,7 @@ const server = (app, express) =>{
 
      
   db()
-    .then((connection)=>{ console.log('Knex´d');
+    .then((connection)=>{
       try {
         const knex = connection;
         setEnv('development'); //process.ENV

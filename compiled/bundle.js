@@ -26836,7 +26836,7 @@ var require$$0$35 = Object.freeze({
        'use strict';
 
        var api = {};
-       var PREFIX = '/api/v1';
+       var PREFIX = '/api/v1/mdskASdiuj128';
        var selfCommandState = '';
 
        api.sync = function (route, action) {

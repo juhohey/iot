@@ -35,7 +35,6 @@ const reading = (knex) =>{
     reading.getLatest = async () =>{
        try {
             const result = await knex.select().limit(100).orderBy('createdAt', 'desc').table('readings');
-            console.log('Result', result);
             return result;
        } catch (error) {
             return error;
