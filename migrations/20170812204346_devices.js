@@ -4,7 +4,8 @@ exports.up = function(knex, Promise) {
         t.increments('id').unsigned().primary();
 
         t.string('name').notNull();
-        t.integer('ip').notNull();
+        t.string('description').notNull();
+        t.string('ip').notNull();
         
         t.dateTime('createdAt').notNull();
         t.dateTime('updatedAt').nullable();

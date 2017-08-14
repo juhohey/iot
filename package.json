@@ -9,11 +9,11 @@
     "start": "nodemon   index.js --watch ./server/ ",
     "build-css": "node-sass client/scss/master.scss public/master.css",
     "watch-css": "nodemon -w client/scss -e scss --exec npm run build-css",
-    "rollup": "rollup -w -c",
-    "login": "rollup -w -c  \"./rollup.config.login.js\"",
+    "rollup": "rollup -c",
+    "login": "rollup -c  \"./rollup.config.login.js\"",
     "dev": " npm run watch-css | npm run rollup",
     "migrate": "knex migrate:latest",
-    "create-client": "create-react-app iot-client"
+    "build": "npm run rollup && npm run login && npm run build-css"
   },
   "author": "",
   "license": "ISC",
