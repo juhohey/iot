@@ -1,0 +1,47 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family:$font_family_body;
+    color: $color_font;
+}
+
+body {
+    min-height: 100%;
+}
+
+img {
+    max-width: 100%;
+}
+
+// Links
+a {
+    color: $color_main;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        color: darken($color_main, 10%);
+        text-decoration: underline;
+    }
+}
+p{
+  line-height: 1.4;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+// iOS "clickable elements" fix for role="button"
+// see https://developer.mozilla.org/en-US/docs/Web/Events/click#Safari_Mobile
+[role='button'] {
+    cursor: pointer;
+}
+
+.container{
+    padding-left: 1rem;
+    padding-right: 1rem;
+} 

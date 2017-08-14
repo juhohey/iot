@@ -1,0 +1,12 @@
+.navigation {
+    width: 60%;
+    &-item{
+        color: white;
+        padding: 2rem 1rem;
+        display: inline-flex;
+        @include pseudo(darken($color_main, 2), white);
+        transition: background-color .2s ease;
+        cursor: pointer;
+        position: relative;
+    }
+}

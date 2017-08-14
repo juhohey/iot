@@ -4,3 +4,4 @@ public
 maria.txt
 iot.sqlite
 package.lock
+npm-debug.*

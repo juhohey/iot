@@ -1,0 +1,9 @@
+export const REQUESTED = 'COMMAND_REQUESTED';
+export const COMPLETED = 'COMMAND_COMPLETED';
+export const CANCELLED = 'COMMAND_CANCELLED';
+
+export default {
+    REQUESTED,
+    COMPLETED,
+    CANCELLED
+}

@@ -1,0 +1,10 @@
+.header{
+    background: $color_main;
+    padding: 0 1rem;
+    color: white;
+    &-contain {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+}

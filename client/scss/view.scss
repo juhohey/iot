@@ -1,0 +1,50 @@
+.view {
+    
+    display: flex;
+    &-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        @include cover();
+        &-col {
+            padding: 3rem 2rem 2rem;
+            background: white;
+            @include material-shadow();
+        }
+    }
+    &-fill{
+        &-to{
+            @include fill-parent;
+            display: none;
+            animation: fill-in .3s ease forwards;
+            &.forwards{
+                display: block;
+            }
+            &.initial{
+                display: block;
+                animation: none;
+            }
+            &.backwards{
+                display: block; 
+                animation: fill-out .3s ease forwards;
+            }
+        }
+    }
+} 
+@keyframes fill-in{
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@keyframes fill-out{
+    0%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+    }
+}

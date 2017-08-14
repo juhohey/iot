@@ -1,0 +1,13 @@
+.user-menu{
+    width: 20%;
+    // align-self: flex-end;
+    @include center();
+    &-icon{
+        @include center();
+        color: white;
+        border-radius: 50%;
+        cursor: pointer;
+        padding: 0.6rem;
+        border: 2px solid white;
+    }
+}     

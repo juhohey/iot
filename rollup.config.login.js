@@ -7,30 +7,29 @@ import nodeResolve from 'rollup-plugin-node-resolve';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 import replace from 'rollup-plugin-replace';
 import sass from 'rollup-plugin-sass';
-import scss from 'rollup-plugin-scss';
 
 const getStyleVars = ()=>fs.readFileSync('./client/scss/variables.scss').toString();
 
 export default {
-  entry: 'client/js/index.js',
-  dest:'public/bundle.js',
+  entry: 'client/js/login/index.js',
+  dest:'public/bundle.login.js',
   sourceMap: false,
   plugins: [
      replace({
       'process.env.NODE_ENV': JSON.stringify( 'development' )
     }),
     sourcemaps(),
-    scss({output: true, options:{ data:getStyleVars()}}),
+    sass({output: true, options:{ data:getStyleVars()}}),
     nodeResolve({
       jsnext: true,
       main: true
     }),
     commonjs({
-      exclude:['./node_modules/lodash-es/**', './node_modules/symbol-observable/**', './node_modules/redux/node_modules/symbol-observable/**'] /** Some problem with top level exports w/ React */
+      exclude:['./node_modules/lodash-es/**', './node_modules/symbol-observable/**'] /** Some problem with top level exports w/ React */
     }),
     babel(babelrc())
   ],
   format: 'iife',
   useStrict:false,
-  moduleName:'app'
+  moduleName:'login'
 };

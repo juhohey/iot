@@ -1,0 +1,29 @@
+.commands {
+    &-output {
+            margin: 1rem 0;
+            padding: 2rem 2rem 2rem 0;
+            background: $color_black_1;
+            color: #f9f9f9;
+            font-family: monospace;
+            font-size: 1.5rem;
+        &-line {
+            margin-bottom: 24px;
+            display: block;
+            &-command {
+                color: $color_main;
+                display: block;
+                padding-left: .5rem;
+                margin-bottom: 10px;
+            }
+            &-in {
+                display: block;
+                padding-left: .5rem;
+                margin-bottom: 6px;
+            }
+            &-out {
+                display: block;
+                padding-left: .5rem;
+            }
+        }
+    }
+}

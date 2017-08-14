@@ -1,0 +1,8 @@
+.logo {
+    margin: 0 1rem 0 0;
+    color: white;
+    width: 200px;
+    &-link {
+        @include pseudo(transparent, white);
+    }
+}

@@ -29,11 +29,15 @@ const server = (app, express) =>{
      
   db()
     .then((connection)=>{ console.log('Knex´d');
-      const knex = connection;
-      setEnv('development'); //process.ENV
-      bootstrap(); //Autoload modules
-      router(app, express, knex);
-      api(app, knex); //Autoload API
+      try {
+        const knex = connection;
+        setEnv('development'); //process.ENV
+        bootstrap(); //Autoload modules
+        router(app, express, knex);
+        api(app, knex); //Autoload API
+      } catch (error) {
+        console.log('error',error);
+      }
     })
     .catch(err=>console.log('DB:err', JSON.stringify(err)))
   

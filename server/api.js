@@ -13,7 +13,7 @@ const api = (app, knex) =>{
 
     'use strict';
     const api = {};
-    const API_PREFIX = '/api/mdskASdiuj128';
+    const API_PREFIX = '/api/v1';
 
     const apiContexts = readModuleFile
       .require([__dirname, '/api'], isJS)
