@@ -95,13 +95,13 @@ DELETE `/api/v1/readings`
 returns the amount deleted.
 
 #### List single
-GET `/api/v1/mdskASdiuj128/readings/:id`
+GET `/api/v1/readings/:id`
 Where :id is the row id of the item, i.e   
-GET `/api/v1/mdskASdiuj128/readings/1`.
+GET `/api/v1/readings/1`.
 returns the item if found. 
 
 #### Update single
-POST `/api/v1/mdskASdiuj128/readings/:id`
+POST `/api/v1/readings/:id`
 body is the same as in an insert query, but there must be an id field in the URL.
 ```
 body:
@@ -111,6 +111,6 @@ body:
 ```
 
 #### Delete single
-DELETE `/api/v1/mdskASdiuj128/readings/:id`
+DELETE `/api/v1/readings/:id`
 id field in the URL. 
 returns the amount deleted (1)
