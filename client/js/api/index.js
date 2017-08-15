@@ -9,7 +9,7 @@ const api = (store) => {
 
     'use strict';
     const api = {};
-    const PREFIX = '/api/v1/mdskASdiuj128';
+    const PREFIX = '/api/v1';
     let selfCommandState = '';
 
     api.sync = (route, action) => {
