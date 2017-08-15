@@ -6,20 +6,20 @@
   "scripts": {
     "test": "ava --verbose",
     "server": "nodemon --watch server/ index.js  --no-deprecation",
-    "start": "nodemon   index.js --watch ./server/ ",
     "build-css": "node-sass client/scss/master.scss public/master.css",
     "watch-css": "nodemon -w client/scss -e scss --exec npm run build-css",
     "rollup": "rollup -c",
     "login": "rollup -c  \"./rollup.config.login.js\"",
     "dev": " npm run watch-css | npm run rollup",
     "migrate": "knex migrate:latest",
-    "build": "npm run rollup && npm run login && npm run build-css && sh ./scripts/build.sh"
+    "build": "npm run rollup && npm run login && npm run build-css && sh ./scripts/build.sh",
+    "start": "pm2 start iot-api",
+    "restart": "sh ./scripts/compile-to-build.sh && pm2 restart iot-api"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^1.0.2",
-    "bcryptjs": "^2.4.0",
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.7",

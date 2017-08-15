@@ -32,7 +32,7 @@ const device = (knex) =>{
            }
            
        } catch (error) {
-           console.log('ERR', error);
+           console.log('device.get error', error);
             return error;
        }
     }

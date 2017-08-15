@@ -34,7 +34,6 @@ const http = function() {
           if(!route) reject({status:"No route present"});
           if(method!=="GET"&&!params) params = "";
 
-          //console.log("HTTP.req.send",route, method, parsedParams);
           try {
             if(parsedParams) req.send(parsedParams);
             else req.send();
@@ -45,7 +44,7 @@ const http = function() {
 
           req.onreadystatechange = function() {
 
-            if(req.readyState === 4){// console.log('http ready', window.getS() );
+            if(req.readyState === 4){
               if(req.status === 200)  resolve( parseResponse(req.response) );
               else reject( req.response );
             }
@@ -80,7 +79,6 @@ const http = function() {
   };
   http.file = function (route, method, params, headers) {
     let file = getFile(params);
-  //  console.log("http file",file);
     return http.request(route, method, params, headers, file);
   };
 

@@ -19,7 +19,6 @@ class Commands extends React.Component{
     } 
     onUpdate(){
         const state = this.props.store.getState();
-        console.log('Command -state',this.props.device);
         this.setState({actions:state.commands, output:state.output});
     }
     setActions(){

@@ -26,13 +26,11 @@ const api = (store) => {
         store.subscribe( ()=>{
             const state = store.getState();
             handleCommands(state.command);
-            console.log(state);
         });
     }
 
     const handleCommands = (userRequestedCommands) => {
         const recent = userRequestedCommands[0];
-        console.log('recent', recent);
         if( recent  &&
             recent.status === REQUESTED &&
             selfCommandState !== REQUESTED) {
@@ -50,7 +48,6 @@ const api = (store) => {
         }
     }
 
-    console.log('typeof command', typeof command);
     onUpdate();
     return api;
 };

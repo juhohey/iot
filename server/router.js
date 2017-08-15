@@ -8,24 +8,6 @@ const router = (app, express, knex) => {
     'use strict';
     const router = {};
 
-    app.get('/login', (req,res)=>{
-        res.render('login');
-    });
-
-    app.post('/login', (req, res) => {
-
-        auth.login(req, res)
-            .then(success=>{
-                console.log('auth returned a non error', success);
-                res.send('success')
-            })
-            .catch(err=>{
-                console.log('ERR', err);
-                res.status(500).send({status:'error', message:JSON.stringify(err)})
-            });
-
-    });
-
     admin(app, express, knex);
 };
 

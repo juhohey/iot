@@ -13,14 +13,12 @@ const db = require('./db/sqlite');
  * @param {Object} express
  * @return {Object} server 
  */
-const server = (app, express) =>{
+const server = (app, express) => {
   'use strict';
 
   const server = {};
 
-  const setEnv = env=> process.env.NODE_ENV = env;
-
-  const bootstrap = (params)=> {
+  const bootstrap = (params) => {
      readModuleFile
       .require([__dirname, '/bootstrap'], fileTypes.isJS)
       .map(fileModule=>fileModule.module(app, express));
@@ -28,10 +26,9 @@ const server = (app, express) =>{
 
      
   db()
-    .then((connection)=>{
+    .then((connection) => {
       try {
         const knex = connection;
-        setEnv('development'); //process.ENV
         bootstrap(); //Autoload modules
         router(app, express, knex);
         api(app, knex); //Autoload API

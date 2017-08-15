@@ -10,14 +10,14 @@ const getPayload = (payloadString) => {
         const payload = JSON.parse(payloadString);
         return payload;
     } catch (notJson) {
-        console.log('wat');
+        console.error('payload not JSON', notJson);
     }
 } 
  
 class Device extends React.Component{
 
     componentWillMount(){
-        console.log('this.devices', this.props.id);
+
         this.state = {device:this.getDeviceFromStore(), readings:this.getReadingsFromStore()}
         this.props.store.subscribe(()=>{
             this.setState({
@@ -51,7 +51,7 @@ class Device extends React.Component{
         if(! devices || !devices.length) return [];
 
         const device = devices.slice(devices.length-1, 1).filter(d=>d.id == this.props.id)[0]; //Different types...
-        if(device) return device; console.log('this.devices', devices.slice(devices.length-1, 1).filter(d=>d.id === this.props.id));
+        if(device) return device; 
         return {name:''};
     }
     render() {

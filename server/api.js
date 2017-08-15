@@ -9,7 +9,7 @@ const {isJS} = require('./helpers/file-types');
  * @param {Object} app
  * @param {Object} knex
  */ 
-const api = (app, knex) =>{
+const api = (app, knex) => {
 
     'use strict';
     const api = {};
@@ -17,7 +17,7 @@ const api = (app, knex) =>{
 
     const apiContexts = readModuleFile
       .require([__dirname, '/api'], isJS)
-      .map(fileModule=>fileModule.module(app, knex));
+      .map(fileModule => fileModule.module(app, knex));
     
     /**
      * Attach a route callback
@@ -27,8 +27,8 @@ const api = (app, knex) =>{
      * @param {String} route
      * @param {Function} callback
      */
-    const attachCallback = (method, route, callback) =>{
-        app[method](route, (req, res)=>{
+    const attachCallback = (method, route, callback) => {
+        app[method](route, (req, res) => {
             callback(req)
             .then(result=>res.json(result))
             .catch(err=>res.status(500).send(err.message)); //Debug
@@ -42,7 +42,7 @@ const api = (app, knex) =>{
      * @param {Object} [context]
      * @return {Object} where the route key is the attached route
      */
-    const getContex = (route, context) =>{
+    const getContex = (route, context) => {
 
         if(context) return Object.keys(context).map(methodOrRoute=>{ //metodORoute = get: ()=> || '/foobar'
 
@@ -59,9 +59,9 @@ const api = (app, knex) =>{
     /**
      * List of routes added 
      */
-    const apiRoutes = apiContexts.map(apiContext =>{
+    const apiRoutes = apiContexts.map(apiContext => {
 
-        return Object.keys(apiContext).map(route =>{ //route = '/foo'
+        return Object.keys(apiContext).map(route => { //route = '/foo'
             return getContex(API_PREFIX + route, apiContext[route]);
         });
     });
