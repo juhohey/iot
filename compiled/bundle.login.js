@@ -22769,7 +22769,6 @@ var require$$13 = Object.freeze({
 	      if (!route) reject({ status: "No route present" });
 	      if (method !== "GET" && !params) params = "";
 
-	      //console.log("HTTP.req.send",route, method, parsedParams);
 	      try {
 	        if (parsedParams) req.send(parsedParams);else req.send();
 	      } catch (routeExeption) {
@@ -22779,7 +22778,6 @@ var require$$13 = Object.freeze({
 	      req.onreadystatechange = function () {
 
 	        if (req.readyState === 4) {
-	          // console.log('http ready', window.getS() );
 	          if (req.status === 200) resolve(parseResponse(req.response));else reject(req.response);
 	        }
 	      };
@@ -22813,7 +22811,6 @@ var require$$13 = Object.freeze({
 	  };
 	  http.file = function (route, method, params, headers) {
 	    var file = getFile(params);
-	    //  console.log("http file",file);
 	    return http.request(route, method, params, headers, file);
 	  };
 
@@ -23178,7 +23175,6 @@ var require$$13 = Object.freeze({
 	    return Login;
 	}(React.Component);
 
-	console.log('Render');
 	ReactDom.render(React.createElement(Login, null), document.querySelector('#login'));
 	var index = (function () {});
 

@@ -3,6 +3,7 @@ import errors from './api';
 import devices from './devices';
 import readings from './readings';
 import {commands, command, setOutput} from './commands';
+import sidebarChildren from './sidebar';
 
 export default combineReducers({
   errors,
@@ -10,5 +11,6 @@ export default combineReducers({
   devices,
   commands,
   command,
-  output:setOutput
+  output:setOutput,
+  sidebarChildren
 }); 

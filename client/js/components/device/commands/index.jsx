@@ -2,6 +2,7 @@ import React from 'react';
 import style from './style.scss';
 import {command} from '../../../actions/commands';
 import commandStatus from '../../../api/command-status';
+import Inkd from '../../inkd.jsx';
 
 class Commands extends React.Component{
 
@@ -19,6 +20,7 @@ class Commands extends React.Component{
     } 
     onUpdate(){
         const state = this.props.store.getState();
+        console.log(state)
         this.setState({actions:state.commands, output:state.output});
     }
     setActions(){
@@ -31,8 +33,9 @@ class Commands extends React.Component{
             <div className="commands">
                 <div className="commands-list">
                     {this.state.actions.map( (action, i) => {
-                        return <button key={i} className="button-confirm" onClick={(e)=>this.onClick(action.name)}>
+                        return <button key={i} className="commands-action button-confirm" onClick={(e)=>this.onClick(action.name)}>
                             {action.name}
+                            <Inkd/>
                         </button>
                     })}
                 </div>
@@ -42,7 +45,7 @@ class Commands extends React.Component{
                         return <span key={i} className="commands-output-line">
                             <span className="commands-output-line-command">{this.props.device.name}@{this.props.device.ip}</span>
                             <span className="commands-output-line-in">$ {out.command}</span>
-                            <span className="commands-output-line-out">{out.std}</span>
+                            <span className="commands-output-line-out">{out.stdout}</span>
                         </span> 
                     })}
                 </div>

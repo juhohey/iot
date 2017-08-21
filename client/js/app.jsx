@@ -38,7 +38,6 @@ class App extends React.Component{
                     <FillTo className={this.state.loadState}/>
                     <Header/>
                     <View>
-                        <Sidebar/>
                         <Main>
                             <Route exact path="/admin" component={()=><Dashboard store={store}/>}/>
                             <Route exact path="/admin/devices" component={()=><Devices store={store}/>}/>

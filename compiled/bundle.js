@@ -26549,7 +26549,6 @@ var require$$0$35 = Object.freeze({
          if (!route) reject({ status: "No route present" });
          if (method !== "GET" && !params) params = "";
 
-         //console.log("HTTP.req.send",route, method, parsedParams);
          try {
            if (parsedParams) req.send(parsedParams);else req.send();
          } catch (routeExeption) {
@@ -26559,7 +26558,6 @@ var require$$0$35 = Object.freeze({
          req.onreadystatechange = function () {
 
            if (req.readyState === 4) {
-             // console.log('http ready', window.getS() );
              if (req.status === 200) resolve(parseResponse(req.response));else reject(req.response);
            }
          };
@@ -26593,7 +26591,6 @@ var require$$0$35 = Object.freeze({
      };
      http.file = function (route, method, params, headers) {
        var file = getFile(params);
-       //  console.log("http file",file);
        return http.request(route, method, params, headers, file);
      };
 
@@ -26664,10 +26661,145 @@ var require$$0$35 = Object.freeze({
        CANCELLED: CANCELLED
    };
 
-   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-     return typeof obj;
-   } : function (obj) {
-     return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+   var api = function api(store) {
+
+       'use strict';
+
+       var api = {};
+       var PREFIX = '/api/v1';
+       var selfCommandState = '';
+
+       api.sync = function (route, action) {
+           get(route).then(function (items) {
+               return store.dispatch(action(items));
+           }).catch(function (err) {
+               return store.dispatch(error(err));
+           });
+       };
+
+       api.sync(PREFIX + '/devices', setDevices);
+       api.sync(PREFIX + '/readings/latest', setReadings);
+       api.sync(PREFIX + '/commands', setCommands);
+
+       var onUpdate = function onUpdate() {
+           store.subscribe(function () {
+               var state = store.getState();
+               handleCommands(state.command);
+           });
+       };
+
+       var handleCommands = function handleCommands(userRequestedCommands) {
+           var recent = userRequestedCommands[0];
+           if (recent && recent.status === REQUESTED && selfCommandState !== REQUESTED) {
+               selfCommandState = REQUESTED;
+               put(PREFIX + '/commands/' + recent.action).then(function (output) {
+                   store.dispatch(setCommandOutput(output));
+                   store.dispatch(command({ name: recent.action, status: COMPLETED }));
+                   selfCommandState = COMPLETED;
+               }).catch(function (err) {
+                   store.dispatch(error(err));
+                   store.dispatch(command({ name: recent.action, status: CANCELLED }));
+               });
+           }
+       };
+
+       onUpdate();
+       return api;
+   };
+
+   var FillTo = function FillTo(props) {
+       return React.createElement(
+           'div',
+           { className: 'view-fill-to ' + props.className },
+           React.createElement(
+               'div',
+               { className: 'view-center' },
+               props.children
+           )
+       );
+   };
+
+   var Logo = function Logo() {
+       return React.createElement(
+           'div',
+           { className: 'logo-box' },
+           React.createElement(
+               Link,
+               { className: 'logo-link', to: '/admin' },
+               React.createElement(
+                   'h4',
+                   { className: 'logo' },
+                   'IoT API'
+               )
+           )
+       );
+   };
+
+   var ink = createCommonjsModule(function (module) {
+   module.exports=function(t){function e(n){if(o[n])return o[n].exports;var r=o[n]={i:n,l:!1,exports:{}};return t[n].call(r.exports,r,r.exports,e),r.l=!0,r.exports}var o={};return e.m=t,e.c=o,e.i=function(t){return t},e.d=function(t,o,n){e.o(t,o)||Object.defineProperty(t,o,{configurable:!1,enumerable:!0,get:n})},e.n=function(t){var o=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(o,"a",o),o},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=6)}([function(t,e,o){function n(t){return l(t.duration,Date.now()-t.mouseDown)}function r(t){return t.mouseUp>0?Date.now()-t.mouseUp:0}function i(t){var e=t.duration,o=t.radius,i=.85*a(n(t),0,o,e),u=.15*a(r(t),0,o,e),l=.02*o*s(Date.now()/e);return c(0,i+u+l)}var a=o(7),u=Math.sqrt(2),s=Math.cos,c=Math.max,l=Math.min;t.exports={getMaxRadius:function(t,e,o){return l(.5*c(t,e),o)},getBlotOpacity:function(t,e){return a(r(t),e,-e,t.duration)},getBlotOuterOpacity:function(t,e){return l(this.getBlotOpacity(t,e),a(n(t),0,.3,3*t.duration))},getBlotShiftX:function(t,e,o){return l(1,i(t)/e*2/u)*(o/2-t.x)},getBlotShiftY:function(t,e,o){return l(1,i(t)/e*2/u)*(o/2-t.y)},getBlotScale:function(t){return i(t)/t.radius}}},function(t,e){t.exports={borderRadius:"inherit",height:"100%",left:0,position:"absolute",top:0,width:"100%"}},function(t,e){var o=!1;"undefined"!=typeof window&&(o="ontouchstart"in window||window.DocumentTouch&&document instanceof window.DocumentTouch),t.exports=o},function(t,e){t.exports=function(t){return(window.devicePixelRatio||1)/(t.webkitBackingStorePixelRatio||t.mozBackingStorePixelRatio||t.msBackingStorePixelRatio||t.oBackingStorePixelRatio||t.backingStorePixelRatio||1)}},function(t,e,o){var n=o(0),r=function(t){var e=t.mouseUp,o=t.duration;return!e||Date.now()-e<o};t.exports=function(t){var e=[],o=!1,i=void 0,a={each:function(t,o){for(var n=0,r=e.length;n<r;n++)t.call(o,e[n])},play:function(){o||(o=!0,a.update())},stop:function(){o=!1,cancelAnimationFrame(i)},getTotalOpacity:function(t){for(var o=0,r=0,i=e.length;r<i;r++)o+=n.getBlotOuterOpacity(e[r],t);return o},update:function(){e=e.filter(r),e.length?i=requestAnimationFrame(a.update):a.stop(),t()},add:function(t){e.push(t),a.play()},release:function(t){for(var o=e.length-1;o>=0;o--)if(!e[o].mouseUp)return e[o].mouseUp=t}};return a}},function(t,e){t.exports=interopDefault(require$$8)},function(t,e,o){function n(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function r(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function i(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}var a=Object.assign||function(t){for(var e=1;e<arguments.length;e++){var o=arguments[e];for(var n in o)Object.prototype.hasOwnProperty.call(o,n)&&(t[n]=o[n])}return t},u=o(2),s=0,c=o(3),l=o(5),p=o(1),f=o(4),h=2*Math.PI,d=o(0),g=function(t){function e(o){n(this,e);var i=r(this,t.apply(this,arguments));return i.tick=function(){var t=i.state,e=t.ctx,o=t.color,n=t.density,r=t.height,a=t.width,u=t.store;e.save(),e.scale(n,n),e.clearRect(0,0,a,r),e.fillStyle=o,i.props.background&&(e.globalAlpha=u.getTotalOpacity(i.props.opacity),e.fillRect(0,0,a,r)),u.each(i.makeBlot,i),e.restore()},i._onPress=function(t){var e=t.button,o=t.ctrlKey,n=t.clientX,r=t.clientY,a=t.changedTouches,u=Date.now();if(a)for(var c=0;c<a.length;c++){var l=a[c],p=l.clientX,f=l.clientY;i.pushBlot(u,p,f)}else e!==s||o||i.pushBlot(u,n,r)},i._onRelease=function(){i.state.store.release(Date.now())},i.state={color:"transparent",density:1,height:0,store:f(i.tick),touchEvents:i.touchEvents(),width:0},i}return i(e,t),e.prototype.touchEvents=function(){return this.props.hasTouch?{onTouchStart:this._onPress,onTouchEnd:this._onRelease,onTouchCancel:this._onRelease}:{onMouseDown:this._onPress,onMouseUp:this._onRelease,onMouseLeave:this._onRelease}},e.prototype.makeBlot=function(t){var e=this.state,o=e.ctx,n=e.height,r=e.width,i=t.x,a=t.y,u=t.radius;if(o.globalAlpha=d.getBlotOpacity(t,this.props.opacity),o.beginPath(),this.props.recenter){var s=Math.max(n,r);i+=d.getBlotShiftX(t,s,r),a+=d.getBlotShiftY(t,s,n)}o.arc(i,a,u*d.getBlotScale(t),0,h),o.closePath(),o.fill()},e.prototype.componentWillUnmount=function(){this.state.store.stop()},e.prototype.pushBlot=function(t,e,o){var n=this,r=this.refs.canvas;r instanceof window.HTMLCanvasElement==!1&&(r=r.getDOMNode());var i=r.getBoundingClientRect(),a=i.top,u=i.bottom,s=i.left,l=i.right,p=window.getComputedStyle(r),f=p.color,h=this.state.ctx||r.getContext("2d"),g=c(h),y=u-a,v=l-s,w=d.getMaxRadius(y,v,this.props.radius);this.setState({color:f,ctx:h,density:g,height:y,width:v},function(){n.state.store.add({duration:n.props.duration,mouseDown:t,mouseUp:0,radius:w,x:e-s,y:o-a})})},e.prototype.render=function(){var t=this.state,e=t.density,o=t.height,n=t.width,r=t.touchEvents;return l.createElement("canvas",a({className:"ink",ref:"canvas",style:a({},p,this.props.style),height:o*e,width:n*e,onDragOver:this._onRelease},r))},e}(l.PureComponent);g.defaultProps={background:!0,duration:1e3,opacity:.25,radius:150,recenter:!0,hasTouch:u},t.exports=g},function(t,e){t.exports=function(t,e,o,n){return o*((t=t/n-1)*t*t*t*t+1)+e}}]);
+   });
+
+   var Ink = interopDefault(ink);
+
+   var inkProps = {
+       radius: 10000,
+       opacity: 0.25,
+       duration: 500,
+       background: false,
+       style: { color: 'black' }
+   };
+
+   var Inkd = function Inkd() {
+       return React.createElement(Ink, inkProps);
+   };
+
+   var Navigation = function Navigation() {
+      return React.createElement(
+         'nav',
+         { className: 'navigation' },
+         React.createElement(
+            Link,
+            { to: '/admin/', className: 'navigation-item' },
+            'Dashboard',
+            React.createElement(Inkd, null)
+         ),
+         React.createElement(
+            Link,
+            { to: '/admin/devices', className: 'navigation-item' },
+            'Devices',
+            React.createElement(Inkd, null)
+         )
+      );
+   };
+
+   var UserMenu = function UserMenu() {
+     return React.createElement(
+       'div',
+       { className: 'user-menu' },
+       React.createElement(
+         'div',
+         { className: 'user-menu-icon' },
+         React.createElement(
+           'i',
+           { className: 'material-icons' },
+           'person'
+         )
+       )
+     );
+   };
+
+   var Header = function Header() {
+       return React.createElement(
+           'header',
+           { className: 'header' },
+           React.createElement(
+               'div',
+               { className: 'header-contain' },
+               React.createElement(Logo, null),
+               React.createElement(Navigation, null),
+               React.createElement(UserMenu, null)
+           )
+       );
    };
 
    var asyncGenerator = function () {
@@ -26831,179 +26963,64 @@ var require$$0$35 = Object.freeze({
      return call && (typeof call === "object" || typeof call === "function") ? call : self;
    };
 
-   var api = function api(store) {
+   /**
+    * @store sidebar,
+    * expect items
+    */
 
-       'use strict';
+   var Sidebar = function (_React$component) {
+       inherits(Sidebar, _React$component);
 
-       var api = {};
-       var PREFIX = '/api/v1/mdskASdiuj128';
-       var selfCommandState = '';
+       function Sidebar() {
+           classCallCheck(this, Sidebar);
+           return possibleConstructorReturn(this, (Sidebar.__proto__ || Object.getPrototypeOf(Sidebar)).apply(this, arguments));
+       }
 
-       api.sync = function (route, action) {
-           get(route).then(function (items) {
-               return store.dispatch(action(items));
-           }).catch(function (err) {
-               return store.dispatch(error(err));
-           });
-       };
+       createClass$2(Sidebar, [{
+           key: 'componentWillMount',
+           value: function componentWillMount() {
+               var _this2 = this;
 
-       api.sync(PREFIX + '/devices', setDevices);
-       api.sync(PREFIX + '/readings/latest', setReadings);
-       api.sync(PREFIX + '/commands', setCommands);
+               this.state = {
+                   items: []
+               };
 
-       var onUpdate = function onUpdate() {
-           store.subscribe(function () {
-               var state = store.getState();
-               handleCommands(state.command);
-               console.log(state);
-           });
-       };
-
-       var handleCommands = function handleCommands(userRequestedCommands) {
-           var recent = userRequestedCommands[0];
-           console.log('recent', recent);
-           if (recent && recent.status === REQUESTED && selfCommandState !== REQUESTED) {
-               selfCommandState = REQUESTED;
-               put(PREFIX + '/commands/' + recent.action).then(function (output) {
-                   store.dispatch(setCommandOutput(output));
-                   store.dispatch(command({ name: recent.action, status: COMPLETED }));
-                   selfCommandState = COMPLETED;
-               }).catch(function (err) {
-                   store.dispatch(error(err));
-                   store.dispatch(command({ name: recent.action, status: CANCELLED }));
+               this.props.store.subscribe(function () {
+                   var state = _this2.props.store.getState();
+                   _this2.setState({ items: state.items.slice(0, 1) });
                });
            }
-       };
-
-       console.log('typeof command', typeof command === 'undefined' ? 'undefined' : _typeof(command));
-       onUpdate();
-       return api;
-   };
-
-   var FillTo = function FillTo(props) {
-       return React.createElement(
-           'div',
-           { className: 'view-fill-to ' + props.className },
-           React.createElement(
-               'div',
-               { className: 'view-center' },
-               props.children
-           )
-       );
-   };
-
-   var Logo = function Logo() {
-       return React.createElement(
-           'div',
-           { className: 'logo-box' },
-           React.createElement(
-               Link,
-               { className: 'logo-link', to: '/admin' },
-               React.createElement(
-                   'h4',
-                   { className: 'logo' },
-                   'IoT API'
-               )
-           )
-       );
-   };
-
-   var ink = createCommonjsModule(function (module) {
-   module.exports=function(t){function e(n){if(o[n])return o[n].exports;var r=o[n]={i:n,l:!1,exports:{}};return t[n].call(r.exports,r,r.exports,e),r.l=!0,r.exports}var o={};return e.m=t,e.c=o,e.i=function(t){return t},e.d=function(t,o,n){e.o(t,o)||Object.defineProperty(t,o,{configurable:!1,enumerable:!0,get:n})},e.n=function(t){var o=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(o,"a",o),o},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=6)}([function(t,e,o){function n(t){return l(t.duration,Date.now()-t.mouseDown)}function r(t){return t.mouseUp>0?Date.now()-t.mouseUp:0}function i(t){var e=t.duration,o=t.radius,i=.85*a(n(t),0,o,e),u=.15*a(r(t),0,o,e),l=.02*o*s(Date.now()/e);return c(0,i+u+l)}var a=o(7),u=Math.sqrt(2),s=Math.cos,c=Math.max,l=Math.min;t.exports={getMaxRadius:function(t,e,o){return l(.5*c(t,e),o)},getBlotOpacity:function(t,e){return a(r(t),e,-e,t.duration)},getBlotOuterOpacity:function(t,e){return l(this.getBlotOpacity(t,e),a(n(t),0,.3,3*t.duration))},getBlotShiftX:function(t,e,o){return l(1,i(t)/e*2/u)*(o/2-t.x)},getBlotShiftY:function(t,e,o){return l(1,i(t)/e*2/u)*(o/2-t.y)},getBlotScale:function(t){return i(t)/t.radius}}},function(t,e){t.exports={borderRadius:"inherit",height:"100%",left:0,position:"absolute",top:0,width:"100%"}},function(t,e){var o=!1;"undefined"!=typeof window&&(o="ontouchstart"in window||window.DocumentTouch&&document instanceof window.DocumentTouch),t.exports=o},function(t,e){t.exports=function(t){return(window.devicePixelRatio||1)/(t.webkitBackingStorePixelRatio||t.mozBackingStorePixelRatio||t.msBackingStorePixelRatio||t.oBackingStorePixelRatio||t.backingStorePixelRatio||1)}},function(t,e,o){var n=o(0),r=function(t){var e=t.mouseUp,o=t.duration;return!e||Date.now()-e<o};t.exports=function(t){var e=[],o=!1,i=void 0,a={each:function(t,o){for(var n=0,r=e.length;n<r;n++)t.call(o,e[n])},play:function(){o||(o=!0,a.update())},stop:function(){o=!1,cancelAnimationFrame(i)},getTotalOpacity:function(t){for(var o=0,r=0,i=e.length;r<i;r++)o+=n.getBlotOuterOpacity(e[r],t);return o},update:function(){e=e.filter(r),e.length?i=requestAnimationFrame(a.update):a.stop(),t()},add:function(t){e.push(t),a.play()},release:function(t){for(var o=e.length-1;o>=0;o--)if(!e[o].mouseUp)return e[o].mouseUp=t}};return a}},function(t,e){t.exports=interopDefault(require$$8)},function(t,e,o){function n(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function r(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function i(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}var a=Object.assign||function(t){for(var e=1;e<arguments.length;e++){var o=arguments[e];for(var n in o)Object.prototype.hasOwnProperty.call(o,n)&&(t[n]=o[n])}return t},u=o(2),s=0,c=o(3),l=o(5),p=o(1),f=o(4),h=2*Math.PI,d=o(0),g=function(t){function e(o){n(this,e);var i=r(this,t.apply(this,arguments));return i.tick=function(){var t=i.state,e=t.ctx,o=t.color,n=t.density,r=t.height,a=t.width,u=t.store;e.save(),e.scale(n,n),e.clearRect(0,0,a,r),e.fillStyle=o,i.props.background&&(e.globalAlpha=u.getTotalOpacity(i.props.opacity),e.fillRect(0,0,a,r)),u.each(i.makeBlot,i),e.restore()},i._onPress=function(t){var e=t.button,o=t.ctrlKey,n=t.clientX,r=t.clientY,a=t.changedTouches,u=Date.now();if(a)for(var c=0;c<a.length;c++){var l=a[c],p=l.clientX,f=l.clientY;i.pushBlot(u,p,f)}else e!==s||o||i.pushBlot(u,n,r)},i._onRelease=function(){i.state.store.release(Date.now())},i.state={color:"transparent",density:1,height:0,store:f(i.tick),touchEvents:i.touchEvents(),width:0},i}return i(e,t),e.prototype.touchEvents=function(){return this.props.hasTouch?{onTouchStart:this._onPress,onTouchEnd:this._onRelease,onTouchCancel:this._onRelease}:{onMouseDown:this._onPress,onMouseUp:this._onRelease,onMouseLeave:this._onRelease}},e.prototype.makeBlot=function(t){var e=this.state,o=e.ctx,n=e.height,r=e.width,i=t.x,a=t.y,u=t.radius;if(o.globalAlpha=d.getBlotOpacity(t,this.props.opacity),o.beginPath(),this.props.recenter){var s=Math.max(n,r);i+=d.getBlotShiftX(t,s,r),a+=d.getBlotShiftY(t,s,n)}o.arc(i,a,u*d.getBlotScale(t),0,h),o.closePath(),o.fill()},e.prototype.componentWillUnmount=function(){this.state.store.stop()},e.prototype.pushBlot=function(t,e,o){var n=this,r=this.refs.canvas;r instanceof window.HTMLCanvasElement==!1&&(r=r.getDOMNode());var i=r.getBoundingClientRect(),a=i.top,u=i.bottom,s=i.left,l=i.right,p=window.getComputedStyle(r),f=p.color,h=this.state.ctx||r.getContext("2d"),g=c(h),y=u-a,v=l-s,w=d.getMaxRadius(y,v,this.props.radius);this.setState({color:f,ctx:h,density:g,height:y,width:v},function(){n.state.store.add({duration:n.props.duration,mouseDown:t,mouseUp:0,radius:w,x:e-s,y:o-a})})},e.prototype.render=function(){var t=this.state,e=t.density,o=t.height,n=t.width,r=t.touchEvents;return l.createElement("canvas",a({className:"ink",ref:"canvas",style:a({},p,this.props.style),height:o*e,width:n*e,onDragOver:this._onRelease},r))},e}(l.PureComponent);g.defaultProps={background:!0,duration:1e3,opacity:.25,radius:150,recenter:!0,hasTouch:u},t.exports=g},function(t,e){t.exports=function(t,e,o,n){return o*((t=t/n-1)*t*t*t*t+1)+e}}]);
-   });
-
-   var Ink = interopDefault(ink);
-
-   var inkProps = {
-       radius: 10000,
-       opacity: 0.25,
-       duration: 500,
-       background: false,
-       style: { color: 'black' }
-   };
-
-   var Inkd = function Inkd() {
-       return React.createElement(Ink, inkProps);
-   };
-
-   var Navigation = function Navigation() {
-      return React.createElement(
-         'nav',
-         { className: 'navigation' },
-         React.createElement(
-            Link,
-            { to: '/admin/', className: 'navigation-item' },
-            'Dashboard',
-            React.createElement(Inkd, null)
-         ),
-         React.createElement(
-            Link,
-            { to: '/admin/devices', className: 'navigation-item' },
-            'Devices',
-            React.createElement(Inkd, null)
-         )
-      );
-   };
-
-   var UserMenu = function UserMenu() {
-     return React.createElement(
-       'div',
-       { className: 'user-menu' },
-       React.createElement(
-         'div',
-         { className: 'user-menu-icon' },
-         React.createElement(
-           'i',
-           { className: 'material-icons' },
-           'person'
-         )
-       )
-     );
-   };
-
-   var Header = function Header() {
-       return React.createElement(
-           'header',
-           { className: 'header' },
-           React.createElement(
-               'div',
-               { className: 'header-contain' },
-               React.createElement(Logo, null),
-               React.createElement(Navigation, null),
-               React.createElement(UserMenu, null)
-           )
-       );
-   };
-
-   var Sidebar = function Sidebar() {
-       return React.createElement(
-           'aside',
-           { className: 'sidebar' },
-           React.createElement(
-               'div',
-               { className: 'sidebar-head' },
-               'Sidebar'
-           ),
-           React.createElement(
-               'div',
-               { className: 'sidebar-body' },
-               React.createElement(
-                   'nav',
-                   { className: 'sidebar-navigation' },
+       }, {
+           key: 'render',
+           value: function render() {
+               return React.createElement(
+                   'aside',
+                   { className: 'sidebar' },
                    React.createElement(
                        'div',
-                       { className: 'sidebar-navigation-item' },
-                       'Thing 1'
+                       { className: 'sidebar-head' },
+                       'Sidebar'
                    ),
                    React.createElement(
                        'div',
-                       { className: 'sidebar-navigation-item' },
-                       'Thing 2'
+                       { className: 'sidebar-body' },
+                       React.createElement(
+                           'nav',
+                           { className: 'sidebar-navigation' },
+                           this.state.items.map(function (item) {
+                               return React.createElement(
+                                   'div',
+                                   { className: 'sidebar-navigation-item' },
+                                   'Thing 1'
+                               );
+                           })
+                       )
                    )
-               )
-           )
-       );
-   };
+               );
+           }
+       }]);
+       return Sidebar;
+   }(React.component);
 
    var Main = function Main(props, state) {
       return React.createElement(
@@ -41586,7 +41603,6 @@ var require$$1$84 = Object.freeze({
            key: 'onUpdate',
            value: function onUpdate() {
                var state = this.props.store.getState();
-               console.log('Command -state', this.props.device);
                this.setState({ actions: state.commands, output: state.output });
            }
        }, {
@@ -41691,7 +41707,7 @@ var require$$1$84 = Object.freeze({
            var payload = JSON.parse(payloadString);
            return payload;
        } catch (notJson) {
-           console.log('wat');
+           console.error('payload not JSON', notJson);
        }
    };
 
@@ -41708,7 +41724,6 @@ var require$$1$84 = Object.freeze({
            value: function componentWillMount() {
                var _this2 = this;
 
-               console.log('this.devices', this.props.id);
                this.state = { device: this.getDeviceFromStore(), readings: this.getReadingsFromStore() };
                this.props.store.subscribe(function () {
                    _this2.setState({
@@ -41756,9 +41771,7 @@ var require$$1$84 = Object.freeze({
                var device = devices.slice(devices.length - 1, 1).filter(function (d) {
                    return d.id == _this4.props.id;
                })[0]; //Different types...
-               if (device) return device;console.log('this.devices', devices.slice(devices.length - 1, 1).filter(function (d) {
-                   return d.id === _this4.props.id;
-               }));
+               if (device) return device;
                return { name: '' };
            }
        }, {
@@ -42620,7 +42633,6 @@ var require$$1$84 = Object.freeze({
        return App;
    }(React.Component);
 
-   console.log('Render');
    ReactDom.render(React.createElement(App, null), document.querySelector('#app'));
    var index = (function () {});
 

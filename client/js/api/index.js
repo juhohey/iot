@@ -4,13 +4,14 @@ import {setReadings} from '../actions/readings';
 import {setCommands, command, setCommandOutput} from '../actions/commands';
 import {get, post, put} from '../core/http';
 import {REQUESTED, CANCELLED, COMPLETED} from './command-status';
+import {last} from '../core/helpers'
 
 const api = (store) => {
 
     'use strict';
     const api = {};
     const PREFIX = '/api/v1';
-    let selfCommandState = '';
+    let selfCommandState;
 
     api.sync = (route, action) => {
       get(route)
@@ -30,10 +31,11 @@ const api = (store) => {
     }
 
     const handleCommands = (userRequestedCommands) => {
-        const recent = userRequestedCommands[0];
+        const recent = last(userRequestedCommands);
         if( recent  &&
             recent.status === REQUESTED &&
             selfCommandState !== REQUESTED) {
+
             selfCommandState = REQUESTED;
             put(`${PREFIX}/commands/${recent.action}`)
             .then(output=>{
