@@ -5,9 +5,8 @@
                         position: relative;
     display: flex;
     min-height: 4.8rem;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     padding: 0 1.6rem;
     color: #212121;
     @include pseudo(#eee, #212121);
@@ -16,10 +15,11 @@
     &-name {
         font-size: 1.6rem;
         color: #212121;
+        
+       margin-bottom: 0.5rem;
     }
-    &-description {
-        padding-top: .3rem;
-        font-size: 1.4rem;
+    &-description {padding-top: .3rem;
+    font-size: 1rem;
         color: #757575;
         white-space: normal;
     }
